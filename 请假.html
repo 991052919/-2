@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>岳峰小学2025级13班请假系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F86C6',
+            secondary: '#7FB069',
+            accent: '#FFB830',
+            neutral: '#F5F7FA',
+            dark: '#333F51'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+      }
+      .transition-height {
+        transition: max-height 0.3s ease-in-out;
+      }
+    }
+  </style>
+</head>
+<body class="bg-neutral min-h-screen">
+  <!-- 页面头部 -->
+  <header class="bg-primary text-white shadow-md">
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <div class="flex items-center mb-4 md:mb-0">
+          <i class="fa fa-graduation-cap text-3xl mr-4"></i>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold">岳峰小学</h1>
+            <p class="text-sm md:text-base opacity-90">2025级13班请假系统</p>
+          </div>
+        </div>
+        <div class="text-sm md:text-base">
+          <p id="current-date" class="font-medium"></p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要内容区 -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- 请假表单区域 -->
+      <section class="bg-white rounded-xl p-6 card-shadow transform hover:shadow-lg transition-all duration-300">
+        <h2 class="text-xl md:text-2xl font-bold text-dark mb-6 flex items-center">
+          <i class="fa fa-pencil-square-o text-primary mr-3"></i>请假信息填写
+        </h2>
+        
+        <form id="leave-form" class="space-y-5">
+          <!-- 学生姓名 -->
+          <div>
+            <label for="student-name" class="block text-sm font-medium text-gray-700 mb-1">学生姓名 <span class="text-red-500">*</span></label>
+            <input type="text" id="student-name" name="student-name" 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
+                  required placeholder="请输入学生姓名">
+          </div>
+          
+          <!-- 请假时间 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">请假时间 <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="start-date" class="block text-xs text-gray-500 mb-1">开始日期</label>
+                <input type="date" id="start-date" name="start-date" 
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
+                      required>
+              </div>
+              <div>
+                <label for="start-time" class="block text-xs text-gray-500 mb-1">开始时间</label>
+                <input type="time" id="start-time" name="start-time" 
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
+                      required>
+              </div>
+              <div>
+                <label for="end-date" class="block text-xs text-gray-500 mb-1">结束日期</label>
+                <input type="date" id="end-date" name="end-date" 
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
+                      required>
+              </div>
+              <div>
+                <label for="end-time" class="block text-xs text-gray-500 mb-1">结束时间</label>
+                <input type="time" id="end-time" name="end-time" 
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
+                      required>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 请假原因 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">请假原因 <span class="text-red-500">*</span></label>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="leave-reason" value="事假" class="mr-2 text-primary focus:ring-primary" required>
+                <span>事假</span>
+              </label>
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="leave-reason" value="病假" class="mr-2 text-primary focus:ring-primary">
+                <span>病假</span>
+              </label>
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="leave-reason" value="其他" class="mr-2 text-primary focus:ring-primary">
+                <span>其他</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- 其他原因说明 (当选择"其他"时显示) -->
+          <div id="other-reason-container" class="hidden">
+            <label for="other-reason" class="block text-sm font-medium text-gray-700 mb-1">请说明其他原因</label>
+            <textarea id="other-reason" name="other-reason" rows="2"
+                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none"
+                     placeholder="请输入其他请假原因"></textarea>
+          </div>
+          
+          <!-- 就餐情况 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">请假当天中午是否在学校就餐</label>
+            <div class="flex flex-wrap gap-4">
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="lunch" value="是" class="mr-2 text-primary focus:ring-primary" checked>
+                <span>是</span>
+              </label>
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="lunch" value="否" class="mr-2 text-primary focus:ring-primary">
+                <span>否</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- 课后服务 -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">课后服务参与情况</label>
+            
+            <div class="mb-3">
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="service1" value="是" class="mr-2 text-primary focus:ring-primary" checked>
+                <span>参加第一节课后服务</span>
+              </label>
+            </div>
+            
+            <div>
+              <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <input type="radio" name="service2" value="是" class="mr-2 text-primary focus:ring-primary" checked>
+                <span>参加第二节课后服务</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- 提交按钮 -->
+          <div class="pt-2">
+            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2">
+              <i class="fa fa-paper-plane mr-2"></i>提交请假申请
+            </button>
+          </div>
+        </form>
+      </section>
+      
+      <!-- 预览和记录区域 -->
+      <section class="space-y-6">
+        <!-- 预览区域 -->
+        <div class="bg-white rounded-xl p-6 card-shadow transform hover:shadow-lg transition-all duration-300">
+          <h2 class="text-xl md:text-2xl font-bold text-dark mb-6 flex items-center">
+            <i class="fa fa-eye text-secondary mr-3"></i>请假信息预览
+          </h2>
+          
+          <div id="preview-container" class="space-y-4 text-gray-700">
+            <div class="p-4 border border-dashed border-gray-300 rounded-lg text-center text-gray-500">
+              <p>请填写左侧表单查看预览</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 教师查看区域 -->
+        <div class="bg-white rounded-xl p-6 card-shadow transform hover:shadow-lg transition-all duration-300">
+          <h2 class="text-xl md:text-2xl font-bold text-dark mb-6 flex items-center">
+            <i class="fa fa-lock text-accent mr-3"></i>请假记录查询
+          </h2>
+          
+          <!-- 密码验证 -->
+          <div id="password-container" class="space-y-4">
+            <p class="text-sm text-gray-600">教师请输入密码查看请假记录</p>
+            <div>
+              <label for="teacher-password" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+              <input type="password" id="teacher-password" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all outline-none"
+                    placeholder="请输入查看密码">
+            </div>
+            <button id="verify-password" class="w-full bg-accent hover:bg-accent/90 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2">
+              <i class="fa fa-unlock-alt mr-2"></i>验证密码
+            </button>
+          </div>
+          
+          <!-- 请假记录列表 (默认隐藏) -->
+          <div id="records-container" class="hidden mt-6 space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="font-bold text-lg">请假记录列表</h3>
+              <button id="clear-records" class="text-sm text-red-500 hover:text-red-700 transition-colors flex items-center">
+                <i class="fa fa-trash-o mr-1"></i>清空记录
+              </button>
+            </div>
+            
+            <div id="records-list" class="max-h-80 overflow-y-auto pr-2 space-y-4">
+              <!-- 记录将通过JavaScript动态添加 -->
+              <div class="text-center text-gray-500 py-6 border border-dashed border-gray-300 rounded-lg">
+                暂无请假记录
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <!-- 提交成功提示框 (默认隐藏) -->
+  <div id="success-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa fa-check text-2xl text-green-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">提交成功</h3>
+        <p class="text-gray-600 mb-6">请假信息已成功提交，请等待老师审批</p>
+        <button id="close-modal" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-lg transition-all">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 页脚 -->
+  <footer class="bg-dark text-white/80 py-6 mt-12">
+    <div class="container mx-auto px-4 text-center text-sm">
+      <p>© 2025 岳峰小学2025级13班 请假系统</p>
+    </div>
+  </footer>
+
+  <script>
+    // 设置当前日期和默认请假时间
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+      document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+      
+      // 设置默认请假日期为今天
+      const dateString = now.toISOString().split('T')[0];
+      document.getElementById('start-date').value = dateString;
+      document.getElementById('end-date').value = dateString;
+      
+      // 设置默认时间
+      document.getElementById('start-time').value = '08:00';
+      document.getElementById('end-time').value = '17:30';
+      
+      // 初始化表单预览
+      updatePreview();
+      
+      // 加载保存的记录
+      loadRecords();
+    });
+    
+    // 监听表单变化，实时更新预览
+    const formElements = document.querySelectorAll('#leave-form input, #leave-form textarea');
+    formElements.forEach(element => {
+      element.addEventListener('change', updatePreview);
+      element.addEventListener('input', updatePreview);
+    });
+    
+    // 处理"其他"原因的显示/隐藏
+    const reasonRadios = document.querySelectorAll('input[name="leave-reason"]');
+    const otherReasonContainer = document.getElementById('other-reason-container');
+    
+    reasonRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === '其他') {
+          otherReasonContainer.classList.remove('hidden');
+        } else {
+          otherReasonContainer.classList.add('hidden');
+        }
+        updatePreview();
+      });
+    });
+    
+    // 更新预览区域
+    function updatePreview() {
+      const studentName = document.getElementById('student-name').value || '未填写';
+      
+      // 获取请假时间
+      const startDate = document.getElementById('start-date').value || '未选择';
+      const startTime = document.getElementById('start-time').value || '未选择';
+      const endDate = document.getElementById('end-date').value || '未选择';
+      const endTime = document.getElementById('end-time').value || '未选择';
+      
+      let leaveTime = `${startDate} ${startTime} - ${endDate} ${endTime}`;
+      // 如果开始和结束日期相同，简化显示
+      if (startDate === endDate && startDate !== '未选择') {
+        leaveTime = `${startDate} ${startTime} - ${endTime}`;
+      }
+      
+      let leaveReason = '未选择';
+      const selectedReason = document.querySelector('input[name="leave-reason"]:checked');
+      if (selectedReason) {
+        leaveReason = selectedReason.value;
+        if (leaveReason === '其他') {
+          const otherReason = document.getElementById('other-reason').value || '未说明';
+          leaveReason += `: ${otherReason}`;
+        }
+      }
+      
+      const lunch = document.querySelector('input[name="lunch"]:checked')?.value || '未选择';
+      const service1 = document.querySelector('input[name="service1"]:checked')?.value || '未选择';
+      const service2 = document.querySelector('input[name="service2"]:checked')?.value || '未选择';
+      
+      const previewContainer = document.getElementById('preview-container');
+      previewContainer.innerHTML = `
+        <div class="border-b border-gray-100 pb-3">
+          <p class="text-sm text-gray-500">学生姓名</p>
+          <p class="font-medium">${studentName}</p>
+        </div>
+        <div class="border-b border-gray-100 pb-3">
+          <p class="text-sm text-gray-500">请假时间</p>
+          <p class="font-medium">${leaveTime}</p>
+        </div>
+        <div class="border-b border-gray-100 pb-3">
+          <p class="text-sm text-gray-500">请假原因</p>
+          <p class="font-medium">${leaveReason}</p>
+        </div>
+        <div class="border-b border-gray-100 pb-3">
+          <p class="text-sm text-gray-500">中午就餐</p>
+          <p class="font-medium">${lunch}</p>
+        </div>
+        <div class="border-b border-gray-100 pb-3">
+          <p class="text-sm text-gray-500">第一节课后服务</p>
+          <p class="font-medium">${service1}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">第二节课后服务</p>
+          <p class="font-medium">${service2}</p>
+        </div>
+      `;
+    }
+    
+    // 表单提交处理
+    const leaveForm = document.getElementById('leave-form');
+    leaveForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // 获取表单数据
+      const studentName = document.getElementById('student-name').value;
+      
+      // 获取请假时间
+      const startDate = document.getElementById('start-date').value;
+      const startTime = document.getElementById('start-time').value;
+      const endDate = document.getElementById('end-date').value;
+      const endTime = document.getElementById('end-time').value;
+      
+      const selectedReason = document.querySelector('input[name="leave-reason"]:checked').value;
+      let leaveReason = selectedReason;
+      if (selectedReason === '其他') {
+        const otherReason = document.getElementById('other-reason').value || '未说明';
+        leaveReason += `: ${otherReason}`;
+      }
+      
+      const lunch = document.querySelector('input[name="lunch"]:checked').value;
+      const service1 = document.querySelector('input[name="service1"]:checked').value;
+      const service2 = document.querySelector('input[name="service2"]:checked').value;
+      
+      // 格式化请假时间显示
+      let leaveTimeDisplay = `${startDate} ${startTime} - ${endDate} ${endTime}`;
+      if (startDate === endDate) {
+        leaveTimeDisplay = `${startDate} ${startTime} - ${endTime}`;
+      }
+      
+      // 创建记录对象
+      const record = {
+        id: Date.now(),
+        studentName,
+        leaveTime: {
+          startDate,
+          startTime,
+          endDate,
+          endTime,
+          display: leaveTimeDisplay
+        },
+        leaveReason,
+        lunch,
+        service1,
+        service2,
+        submitDate: new Date().toLocaleString()
+      };
+      
+      // 保存记录
+      saveRecord(record);
+      
+      // 显示成功提示
+      showSuccessModal();
+      
+      // 重置表单
+      leaveForm.reset();
+      otherReasonContainer.classList.add('hidden');
+      
+      // 重置默认时间
+      const now = new Date();
+      const dateString = now.toISOString().split('T')[0];
+      document.getElementById('start-date').value = dateString;
+      document.getElementById('end-date').value = dateString;
+      document.getElementById('start-time').value = '08:00';
+      document.getElementById('end-time').value = '17:30';
+      
+      updatePreview();
+    });
+    
+    // 保存记录到localStorage
+    function saveRecord(record) {
+      let records = JSON.parse(localStorage.getItem('leaveRecords')) || [];
+      records.push(record);
+      localStorage.setItem('leaveRecords', JSON.stringify(records));
+      
+      // 如果已经验证通过，更新记录列表
+      if (!document.getElementById('password-container').classList.contains('hidden')) {
+        loadRecords();
+      }
+    }
+    
+    // 加载记录
+    function loadRecords() {
+      const records = JSON.parse(localStorage.getItem('leaveRecords')) || [];
+      const recordsList = document.getElementById('records-list');
+      
+      if (records.length === 0) {
+        recordsList.innerHTML = `
+          <div class="text-center text-gray-500 py-6 border border-dashed border-gray-300 rounded-lg">
+            暂无请假记录
+          </div>
+        `;
+        return;
+      }
+      
+      // 按时间倒序排列（最新的在前面）
+      records.sort((a, b) => b.id - a.id);
+      
+      let html = '';
+      records.forEach(record => {
+        html += `
+          <div class="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start mb-2">
+              <h4 class="font-bold text-primary">${record.studentName}</h4>
+              <span class="text-xs text-gray-500">提交于 ${record.submitDate}</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <p><span class="text-gray-500">请假时间：</span>${record.leaveTime.display}</p>
+              <p><span class="text-gray-500">请假原因：</span>${record.leaveReason}</p>
+              <p><span class="text-gray-500">中午就餐：</span>${record.lunch}</p>
+              <p><span class="text-gray-500">第一节课后服务：</span>${record.service1}</p>
+              <p><span class="text-gray-500">第二节课后服务：</span>${record.service2}</p>
+            </div>
+          </div>
+        `;
+      });
+      
+      recordsList.innerHTML = html;
+    }
+    
+    // 密码验证
+    const verifyButton = document.getElementById('verify-password');
+    verifyButton.addEventListener('click', function() {
+      const passwordInput = document.getElementById('teacher-password');
+      const password = passwordInput.value;
+      
+      if (password === '3271516') {
+        // 密码正确，显示记录
+        document.getElementById('password-container').classList.add('hidden');
+        document.getElementById('records-container').classList.remove('hidden');
+        loadRecords();
+        
+        // 添加动画效果
+        const recordsContainer = document.getElementById('records-container');
+        recordsContainer.classList.add('animate-fadeIn');
+      } else {
+        // 密码错误，显示错误提示
+        passwordInput.classList.add('border-red-500');
+        passwordInput.classList.add('focus:ring-red-200');
+        passwordInput.classList.add('focus:border-red-500');
+        
+        // 3秒后移除错误样式
+        setTimeout(() => {
+          passwordInput.classList.remove('border-red-500');
+          passwordInput.classList.remove('focus:ring-red-200');
+          passwordInput.classList.remove('focus:border-red-500');
+        }, 3000);
+      }
+    });
+    
+    // 清空记录
+    document.getElementById('clear-records').addEventListener('click', function() {
+      if (confirm('确定要清空所有请假记录吗？此操作不可恢复。')) {
+        localStorage.removeItem('leaveRecords');
+        loadRecords();
+      }
+    });
+    
+    // 显示成功提示框
+    function showSuccessModal() {
+      const modal = document.getElementById('success-modal');
+      const modalContent = document.getElementById('modal-content');
+      
+      modal.classList.remove('hidden');
+      // 触发重排后添加动画类
+      setTimeout(() => {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+    
+    // 关闭成功提示框
+    document.getElementById('close-modal').addEventListener('click', function() {
+      const modal = document.getElementById('success-modal');
+      const modalContent = document.getElementById('modal-content');
+      
+      modalContent.classList.remove('scale-100', 'opacity-100');
+      modalContent.classList.add('scale-95', 'opacity-0');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    });
+  </script>
+</body>
+</html>
